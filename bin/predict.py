@@ -3,6 +3,7 @@
 import argparse
 import glob
 import logging
+import multiprocessing
 import os
 import string
 
@@ -115,4 +116,8 @@ if __name__ == "__main__":
             results_file = data_dir + f"/results_{args.model}.csv"
             pd.DataFrame(results_dict).to_csv(results_file)
     
-    main_function()
+    # Creating process so that the process can be closed when done to release GPU memory
+    p = multiprocessing.Process(target=main_function)
+    p.start()
+    p.join()
+    p.close()
